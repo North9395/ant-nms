@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
+import {connect} from 'react-redux';
 import { Table } from 'antd';
 import Column from 'antd/lib/table/Column';
 import ColumnGroup from 'antd/lib/table/ColumnGroup';
 
+import { stationNameAction } from '../../redux/action';
 import { getGatexState, getLocalStation } from './config';
 import './gatexState.scss';
 
@@ -13,7 +15,6 @@ class GatexState extends Component {
         this.getStateTimer = null;
         this.getStateInterval = 2000;
         this.state = {
-            localStationName: '',
             netObj: {},
             tableData: [],
             pageCurNum: 1,
@@ -27,6 +28,7 @@ class GatexState extends Component {
                 this.setState({
                     localStationName: data.localStationName,
                 })
+                stationNameAction(data.localStationName);
             })
             .catch(e => {})
     }
@@ -66,9 +68,11 @@ class GatexState extends Component {
                         ...station[i - 1],
                     })
                 }
-                this.setState({
-                    tableData: newTableData
-                })
+                if (this.keepGatexState){
+                    this.setState({
+                        tableData: newTableData
+                    })
+                }   
             })
         if (this.getStateTimer)
             clearTimeout(this.getStateTimer)
@@ -87,9 +91,16 @@ class GatexState extends Component {
         this.keepGatexState = false;
     }
     render() {
+        this.netDownAlart = (text, row, index) => {
+            if (text && text.includes("断开")) {
+                return <p className="downTd">{text}</p>
+            }else{
+                return <p>{text}</p>;
+            }
+        }
         const { localStationName, netObj, tableData } = this.state;
         const stateColumn = Object.keys(netObj).map((key, index) => {
-            return <Column title={netObj[key]} dataIndex={key} key={index} />
+            return <Column title={netObj[key]} dataIndex={key} key={index} render={this.netDownAlart}/>
         })
         return (
             <Table dataSource={tableData}>
@@ -104,4 +115,12 @@ class GatexState extends Component {
     }
 }
 
-export default GatexState;
+const mapStateToProps = state => ({
+    stationName: state.stationName
+  })
+  
+  const mapDispatchToProps = dispatch => ({
+    stationNameAction: id => dispatch(stationNameAction(id))
+  })
+  
+  export default connect(mapStateToProps, mapDispatchToProps)(GatexState)

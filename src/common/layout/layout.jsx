@@ -42,6 +42,12 @@ class SiderLayout extends Component {
                 <span style={{"visibility": this.state.collapsed ? 'hidden' : 'visible'}}>所有站点状态</span>
               </Link>
             </Menu.Item>
+            <Menu.Item key="gatexstatus">
+              <Link to="/gatexstatus">
+                <Icon type="project" theme="outlined" />
+                <span style={{"visibility": this.state.collapsed ? 'hidden' : 'visible'}}>接口信息</span>
+              </Link>
+            </Menu.Item>
             <Menu.Item key="gatexlog">
               <Link to="/gatexlog">
                 <Icon type="table" theme="outlined" />
