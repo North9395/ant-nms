@@ -5,7 +5,7 @@
  * 2. trap.jsx:73 Uncaught (in promise) DOMException: play() failed because the user didn't interact with the document first.
 */
 import React, { Component } from 'react';
-import { Modal } from 'antd';
+import { Modal, Icon } from 'antd';
 
 import { getTrap } from './config';
 import './trap.scss';
@@ -182,17 +182,21 @@ class Trap extends Component {
         return (
             <div>
                 <div className="trap-scroll" id="trapDisplayController" style={{'display': isTrap ? 'block' : 'none'}}>
-                    <img id="shutupNoise" className="trap-button"
-                        src={isShutupByUser ? require("../../assert/noNoise.png") : require("../../assert/Noise.png")}
-                        alt=""
+                    
+                    <Icon
+                        id="shutupNoise"
+                        className="trap-button"  
+                        type={isShutupByUser ? "pause" : "sound"}
                         onClick={this.toggleShutByUser}
                     />
-                    <img id="showTrapInfo" className="trap-button" 
-                        src={showTrapBox ? require("../../assert/less.png") : require("../../assert/more.png") }
-                        alt=""
-                        onClick={this.toggleScrollBox}    
+                    <Icon
+                        id="showTrapInfo"
+                        className="trap-button" 
+                        type={showTrapBox ? "up-square" : "down-square"}
+                        onClick={this.toggleScrollBox} 
                     />
-                    <img className="jumpTrap" src={require("../../assert/bulb.png")} alt=""/>
+                    <Icon className="jumpTrap trap-button" type="bulb"/>
+
                     <p className="trapScrollInfo">{trapScrollInfo}</p>
                 </div>
                 <Modal 
@@ -200,6 +204,8 @@ class Trap extends Component {
                     visible={showTrapBox}
                     onOk={this.handleOk}
                     onCancel={this.handleCancel}
+                    cancelText="取消"
+                    okText="确定"
                 >
                     {trapInfos}
                 </Modal>

@@ -6,10 +6,13 @@ import { BrowserRouter, Route, Switch,  } from 'react-router-dom';
 import io from 'socket.io-client';
 import * as serviceWorker from './serviceWorker';
 import SiderLayout from './common/layout/layout';
-import Login from './page/login';
+// import Login from './page/login';
 import GatexState from './page/GatexState/gatexState';
 import PasswdConfig from './page/PasswdConfig/passwdConfig';
 import InterfaceInfo from './page/InterfaceInfo/InterfaceInfo';
+import NetStateLog from './page/NetStateLog/netStateLog';
+import Login from './page/Login/login';
+import Command from './page/Command/command';
 import NotFound from './page/notFound';
 import reducer from './redux/reducer';
 
@@ -34,6 +37,8 @@ ReactDOM.render((
                         <Route path="/login" component={Login} />
                         <Route path="/gatexState" component={GatexState} />
                         <Route path="/gatexStatus" component={InterfaceInfo} />
+                        <Route path="/gatexlog" component={NetStateLog} />
+                        <Route path="/command" component={Command} />
                         <Route path="/passwdconfig" component={PasswdConfig} />
                         <Route component={NotFound} />
                     </Switch>

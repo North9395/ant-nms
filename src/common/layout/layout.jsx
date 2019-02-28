@@ -36,12 +36,12 @@ class SiderLayout extends Component {
                 <span style={{"visibility": this.state.collapsed ? 'hidden' : 'visible'}}>站点状态</span>
               </Link>
             </Menu.Item>
-            <Menu.Item key="allState">
+            {/* <Menu.Item key="allState">
               <Link to="/allState">
                 <Icon type="align-left" theme="outlined" />
                 <span style={{"visibility": this.state.collapsed ? 'hidden' : 'visible'}}>所有站点状态</span>
               </Link>
-            </Menu.Item>
+            </Menu.Item> */}
             <Menu.Item key="gatexstatus">
               <Link to="/gatexstatus">
                 <Icon type="project" theme="outlined" />
@@ -54,6 +54,12 @@ class SiderLayout extends Component {
                 <span style={{"visibility": this.state.collapsed ? 'hidden' : 'visible'}}>日志信息</span>
               </Link>
             </Menu.Item>
+            <Menu.Item key="command">
+              <Link to="/command">
+                <Icon type="build" theme="outlined" />
+                <span style={{"visibility": this.state.collapsed ? 'hidden' : 'visible'}}>命令行执行</span>
+              </Link>
+            </Menu.Item>
             <Menu.Item key="deltaConfig">
               <Link to="/deltaConfig">
                 <Icon type="hdd" theme="outlined" />
@@ -63,20 +69,25 @@ class SiderLayout extends Component {
             <Menu.Item key="rtt">
               <Link to="/rtt">
                 <Icon type="stock" theme="outlined" />
-                <span style={{"visibility": this.state.collapsed ? 'hidden' : 'visible'}}>心跳展示</span>
+                <span style={{"visibility": this.state.collapsed ? 'hidden' : 'visible'}}>RTT展示</span>
+              </Link>
+            </Menu.Item>
+            <Menu.Item key="topology">
+              <Link to="/topology">
+              <Icon type="share-alt" theme="outlined" />
+                <span style={{"visibility": this.state.collapsed ? 'hidden' : 'visible'}}>拓扑结构</span>
               </Link>
             </Menu.Item>
             <Menu.Item key="passwdconfig">
               <Link to="/passwdconfig">
                 <Icon type="form" theme="outlined" />
-                <span style={{"visibility": this.state.collapsed ? 'hidden' : 'visible'}}>修改口令</span>
+                <span style={{"visibility": this.state.collapsed ? 'hidden' : 'visible'}}>密码修改</span>
               </Link>
             </Menu.Item>
             <Menu.Item key="logout">
               <Link to="/logout">
                 <Icon type="close" theme="outlined" />
                 <span style={{"visibility": this.state.collapsed ? 'hidden' : 'visible'}}>退出系统</span>
-              
               </Link>
             </Menu.Item>     
           </Menu>

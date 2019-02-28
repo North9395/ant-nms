@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
-import { Table } from 'antd';
+import { Table, Switch } from 'antd';
 import Column from 'antd/lib/table/Column';
 import ColumnGroup from 'antd/lib/table/ColumnGroup';
 
@@ -18,13 +18,30 @@ class GatexState extends Component {
             netObj: {},
             tableData: [],
             pageCurNum: 1,
-            stationNumPerPage: 10
+            stationNumPerPage: 10,
+            tableMode: true,
+            localMode: true,
         }
+        // this.handleTableModeChange = this.handleTableModeChange.bind(this);
+        // this.handleLocalModeChange = this.handleLocalModeChange.bind(this);
+    }
+
+    handleLocalModeChange = (checked) => {
+        this.setState({
+            tableMode: checked,
+        })
+    }
+
+    handleTableModeChange = (checked) => {
+        this.setState({
+            localMode: checked,
+        })
     }
 
     getStateName = () => {
         getLocalStation()
             .then(data => {
+                console.log(data);
                 this.setState({
                     localStationName: data.localStationName,
                 })
@@ -98,19 +115,31 @@ class GatexState extends Component {
                 return <p>{text}</p>;
             }
         }
-        const { localStationName, netObj, tableData } = this.state;
+        const { localStationName, netObj, tableData, tableMode, localMode } = this.state;
         const stateColumn = Object.keys(netObj).map((key, index) => {
             return <Column title={netObj[key]} dataIndex={key} key={index} render={this.netDownAlart}/>
         })
         return (
-            <Table dataSource={tableData}>
-                <ColumnGroup title={`站点状态（当前登录站点：${localStationName}）`} className="state-captial">
-                    <Column title="站点名" dataIndex="city" />
-                    <ColumnGroup title="状态">
-                        {stateColumn}
+            <div>
+                <Switch checkedChildren="表格" unCheckedChildren="地图" defaultChecked onChange={(checked) => {this.handleTableModeChange(checked)}}/>
+                <Switch checkedChildren="本地" unCheckedChildren="全网" defaultChecked onChange={(checked) => {this.handleLocalModeChange(checked)}}/>
+                {tableMode && localMode && <Table dataSource={tableData}>
+                    <ColumnGroup title={`站点状态（当前登录站点：${localStationName}）`} className="state-captial">
+                        <Column title="站点名" dataIndex="city" />
+                        <ColumnGroup title="状态">
+                            {stateColumn}
+                        </ColumnGroup>
                     </ColumnGroup>
-                </ColumnGroup>
-            </Table>
+                </Table>}
+                {tableMode && !localMode && <Table dataSource={tableData}>
+                    <ColumnGroup title={`站点状态（当前登录站点：${localStationName}）`} className="state-captial">
+                        <Column title="站点名" dataIndex="city" />
+                        <ColumnGroup title="状态">
+                            {stateColumn}
+                        </ColumnGroup>
+                    </ColumnGroup>
+                </Table>}
+            </div>
         )
     }
 }

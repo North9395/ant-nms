@@ -7,7 +7,7 @@ const rewireLess = require('react-app-rewire-less');
         config,
     );
    config = rewireLess.withLoaderOptions({
-        modifyVars: { "@primary-color": "#D3D3D3" },
+        modifyVars: { "@primary-color": "#4682B4" },
         javascriptEnabled: true,
    })(config, env);
    return config;

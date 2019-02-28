@@ -10,11 +10,11 @@ import { withRouter } from "react-router";
 import { Form, Input, Icon, Button, message } from 'antd';
 
 import { changePwdFetch } from './config';
-import './PasswdConfig.scss';
+import './login.scss';
 
 const FormItem = Form.Item;
 
-class PasswdConfig extends Component {
+class Login extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -52,18 +52,20 @@ class PasswdConfig extends Component {
                     .then(res => {
                         console.log(res)
                         if (res === "success" || res.data === "success") {
-                            message.success('修改成功');
+                            message.success('登录成功');
+                            localStorage.setItem('user', data.user);
+                            localStorage.setItem('password', data.passwd);
                             setTimeout(function() {
                                 console.log(match, location, history)
                                 history.push('/gatexState');
                             }, 1000);
                         }else {
-                            message.error('修改失败');
+                            message.error('登录失败');
                         }
                         
                     })
                     .catch(e => {
-                        message.error('修改失败');
+                        message.error('登录失败');
                     })
             }
         })
@@ -80,7 +82,7 @@ class PasswdConfig extends Component {
             },
           };
         const { getFieldDecorator, getFieldsError,  } = this.props.form;
-        const _form =  this.props.form;
+        // const _form =  this.props.form;
         return (
             <Form onSubmit={this.handleSubmit} className="change-pwd-form">
                 <FormItem label="用户名" {...formItemLayout} >
@@ -99,23 +101,6 @@ class PasswdConfig extends Component {
                             <Input prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" />
                         )}
                 </FormItem>
-                <FormItem label="确认密码" {...formItemLayout}>
-                        {getFieldDecorator('confirmPassword', {
-                            rules: [
-                                { required: true, message: '请确认密码'},
-                                {
-                                    validator(rule, values, callback) {
-                                        var pwd = _form.getFieldValue('password');
-                                        if (pwd === values) callback();
-                                        else callback('两次输入密码不一致'); 
-                                    }
-                                }
-                            ],
-                            initialValue: 'admin',
-                        })(
-                            <Input prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" />
-                        )}
-                </FormItem>
                 <FormItem
                     wrapperCol={{
                         xs: { span: 24, offset: 0 },
@@ -123,7 +108,7 @@ class PasswdConfig extends Component {
                     }}
                 >
                     <Button type="primary" htmlType="submit" disabled={hasErrors(getFieldsError())}>
-                        修改密码
+                        登录
                     </Button>
                 </FormItem>
             </Form>
@@ -132,11 +117,11 @@ class PasswdConfig extends Component {
     }
 }
 
-const PasswdConfigWithRouter = withRouter(PasswdConfig);
+const LoginWithRouter = withRouter(Login);
 
 function hasErrors(fieldsError) {
     return Object.keys(fieldsError).some(field => fieldsError[field])
 }
 
-const WrappedNormalLoginForm = Form.create()(PasswdConfigWithRouter);
+const WrappedNormalLoginForm = Form.create()(LoginWithRouter);
 export default WrappedNormalLoginForm;

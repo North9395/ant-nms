@@ -149,3 +149,10 @@ export function judgePercent(str){
     else
         return str;
 }
+
+export function typeOf(value) {
+    if (isNaN(value)) {
+        return 'NaN';
+    }
+    return Object.prototype.toString.call(value).slice(8, -1).toLowerCase();
+}

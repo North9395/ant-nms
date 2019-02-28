@@ -6,9 +6,9 @@ import ColumnGroup from 'antd/lib/table/ColumnGroup';
 
 import { stationNameAction } from '../../redux/action';
 import { judge } from '../../common/util';
-import { getGatexStatus, getStationTraffic } from './config';
+import { getGatexStatus, getStationTraffic, getResetTraffic } from './config';
 import './InterfaceInfo.scss';
-import { STATUS_CODES } from 'http';
+import { Button } from 'antd/lib/radio';
 
 class GatexState extends Component {
     constructor(props) {
@@ -34,7 +34,13 @@ class GatexState extends Component {
             return <p key={index}>{text}</p>;
         }
     }
-
+    resetTraffic = () => {
+        getResetTraffic()
+            .then(data => {
+                if (data && data.exitStatus === 'success')
+                    this.getStatusInfo();
+            })
+    }
     getStatusInfo = () => {
         getGatexStatus()
             .then(data => {
@@ -67,17 +73,21 @@ class GatexState extends Component {
                         })
                     }  
                 })
-        if (this.getStatusTimer)
-            clearTimeout(this.getStatusTimer)
-        if (this.keepGatexStatus)
-            setTimeout(this.getStatusInfo, this.getStatusInterval);
-
     }
+
+    setIntervalGetInfo = () => {
+        this.getStatusInfo();
+        if (this.getStatusTimer)
+            clearTimeout(this.setIntervalGetInfo)
+        if (this.keepGatexStatus)
+            setTimeout(this.setIntervalGetInfo, this.getStatusInterval);
+    }
+
     componentWillMount() {
         this.keepGatexStatus = true;
     }
     componentDidMount() {
-        this.getStatusInfo();
+        this.setIntervalGetInfo();
     }
     componentWillUnmount() {
         this.keepGatexStatus = false;
@@ -97,7 +107,7 @@ class GatexState extends Component {
                     </ColumnGroup>
                 </Table>
                 <Table dataSource={interfaceTraffic} id="interface-traffic">
-                    <ColumnGroup title={`接口流量（当前登录站点：${stationName}）`} className="interface-traffic-captial">
+                    <ColumnGroup title={`接口流量（当前登录站点：本级）`} className="interface-traffic-captial">
                         <Column title="设备接口" dataIndex="interfacename" key="11"></Column>
                         <Column title="接口状态" dataIndex="state" key="12"></Column>
                         <ColumnGroup title="数据速率(包/秒)">
@@ -118,6 +128,7 @@ class GatexState extends Component {
                         </ColumnGroup>
                     </ColumnGroup>
                 </Table>
+                <Button onclick={this.resetTraffic}>流量清零</Button>
             </div>
         )
     }
