@@ -10,5 +10,6 @@ const rewireLess = require('react-app-rewire-less');
         modifyVars: { "@primary-color": "#4682B4" },
         javascriptEnabled: true,
    })(config, env);
+   config.devtool = "source-map";
    return config;
 };

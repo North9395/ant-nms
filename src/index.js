@@ -11,6 +11,7 @@ import GatexState from './page/GatexState/gatexState';
 import PasswdConfig from './page/PasswdConfig/passwdConfig';
 import InterfaceInfo from './page/InterfaceInfo/InterfaceInfo';
 import NetStateLog from './page/NetStateLog/netStateLog';
+import ConfigModify from './page/ConfigModify/ConfigModify';
 import Login from './page/Login/login';
 import Command from './page/Command/command';
 import NotFound from './page/notFound';
@@ -40,6 +41,7 @@ ReactDOM.render((
                         <Route path="/gatexlog" component={NetStateLog} />
                         <Route path="/command" component={Command} />
                         <Route path="/passwdconfig" component={PasswdConfig} />
+                        <Route path="/systemConfig" component={ConfigModify} />
                         <Route component={NotFound} />
                     </Switch>
                 </SiderLayout>

@@ -5,7 +5,8 @@ import Column from 'antd/lib/table/Column';
 import ColumnGroup from 'antd/lib/table/ColumnGroup';
 
 import { stationNameAction } from '../../redux/action';
-import { getGatexState, getLocalStation } from './config';
+import { getGatexState, getLocalStation, localTableData, globalTableData } from './config';
+import store from '../../redux/store';
 import './gatexState.scss';
 
 class GatexState extends Component {
@@ -28,13 +29,13 @@ class GatexState extends Component {
 
     handleLocalModeChange = (checked) => {
         this.setState({
-            tableMode: checked,
+            localMode: checked,
         })
     }
 
     handleTableModeChange = (checked) => {
         this.setState({
-            localMode: checked,
+            tableMode: checked,
         })
     }
 
@@ -45,7 +46,7 @@ class GatexState extends Component {
                 this.setState({
                     localStationName: data.localStationName,
                 })
-                stationNameAction(data.localStationName);
+                store.dispatch(stationNameAction(data.localStationName));
             })
             .catch(e => {})
     }
@@ -57,7 +58,12 @@ class GatexState extends Component {
         }
         getGatexState(query)
             .then(data => {
-                const newNetObj = data.gatexState.network[0];
+                // 使用本地测试数据
+                if(this.state.localMode)
+                    data = localTableData;
+                else
+                    data = globalTableData;
+                const newNetObj = (((data || {}).gatexState || {}).network || [])[0];
                 const { netObj } = this.state;
                 const preNetArr = Object.keys(netObj);
                 const curNetArr = Object.keys(newNetObj);
@@ -99,7 +105,10 @@ class GatexState extends Component {
     }
     componentWillMount() {
         this.keepGatexState = true;
-        this.getStateName();
+        console.log(store.getState());
+        console.log(store.getState().stationName)
+        if(store.getState().stationName.length <= 0)
+            this.getStateName();
     }
     componentDidMount() {
         this.getState();
@@ -121,24 +130,68 @@ class GatexState extends Component {
         })
         return (
             <div>
-                <Switch checkedChildren="表格" unCheckedChildren="地图" defaultChecked onChange={(checked) => {this.handleTableModeChange(checked)}}/>
-                <Switch checkedChildren="本地" unCheckedChildren="全网" defaultChecked onChange={(checked) => {this.handleLocalModeChange(checked)}}/>
-                {tableMode && localMode && <Table dataSource={tableData}>
-                    <ColumnGroup title={`站点状态（当前登录站点：${localStationName}）`} className="state-captial">
-                        <Column title="站点名" dataIndex="city" />
-                        <ColumnGroup title="状态">
-                            {stateColumn}
+                <label>展示模式切换：</label>
+                <Switch className="modeSwitch" checkedChildren="表格" unCheckedChildren="地图" defaultChecked onChange={(checked) => {this.handleTableModeChange(checked)}}/>
+                <br/>
+                <label>站点模式切换：</label>
+                <Switch className="modeSwitch" checkedChildren="本地" unCheckedChildren="全网" defaultChecked onChange={(checked) => {this.handleLocalModeChange(checked)}}/>
+                {
+                    tableMode && localMode && 
+                    <div>
+                        {/* <p>本地表格</p> */}
+                        <Table dataSource={tableData}>
+                            <ColumnGroup title={`站点状态（当前登录站点：${localStationName}）`} className="state-captial">
+                                <Column title="站点名" dataIndex="city" />
+                                <ColumnGroup title="状态">
+                                    {stateColumn}
+                                </ColumnGroup>
+                            </ColumnGroup>
+                        </Table>
+                    </div>
+                }
+                {
+                    tableMode && !localMode &&
+                    <div>
+                    {/* <p>全局表格</p> */}
+                    <Table dataSource={tableData}>
+                        <ColumnGroup title="全局模式网络状态" className="state-captial">
+                            <Column title="站点一" dataIndex="city1" />
+                            <Column title="站点二" dataIndex="city2" />
+                            <ColumnGroup title="状态">
+                                {stateColumn}
+                            </ColumnGroup>
                         </ColumnGroup>
-                    </ColumnGroup>
-                </Table>}
-                {tableMode && !localMode && <Table dataSource={tableData}>
-                    <ColumnGroup title={`站点状态（当前登录站点：${localStationName}）`} className="state-captial">
-                        <Column title="站点名" dataIndex="city" />
-                        <ColumnGroup title="状态">
-                            {stateColumn}
-                        </ColumnGroup>
-                    </ColumnGroup>
-                </Table>}
+                    </Table>
+                </div>
+                }
+                {
+                    !tableMode && localMode &&
+                    <div>
+                        {/* <p>本地地图</p> */}
+                        {/* <Table dataSource={tableData}>
+                            <ColumnGroup title={`站点状态（当前登录站点：${localStationName}）`} className="state-captial">
+                                <Column title="站点名" dataIndex="city" />
+                                <ColumnGroup title="状态">
+                                    {stateColumn}
+                                </ColumnGroup>
+                            </ColumnGroup>
+                        </Table> */}
+                    </div>
+                }
+                {
+                     !tableMode && !localMode &&
+                     <div>
+                        {/* <p>全局表格</p> */}
+                        {/* <Table dataSource={tableData}>
+                            <ColumnGroup title={`站点状态（当前登录站点：${localStationName}）`} className="state-captial">
+                                <Column title="站点名" dataIndex="city" />
+                                <ColumnGroup title="状态">
+                                    {stateColumn}
+                                </ColumnGroup>
+                            </ColumnGroup>
+                        </Table> */}
+                    </div>
+                }
             </div>
         )
     }

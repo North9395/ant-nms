@@ -9,6 +9,7 @@ import { judge } from '../../common/util';
 import { getGatexStatus, getStationTraffic, getResetTraffic } from './config';
 import './InterfaceInfo.scss';
 import { Button } from 'antd/lib/radio';
+import store from '../../redux/store';
 
 class GatexState extends Component {
     constructor(props) {
@@ -97,7 +98,7 @@ class GatexState extends Component {
             return judge(text)
         };
         const { interfaceColumnStatus, interfaceSourceStatus, interfaceTraffic } = this.state;
-        const { stationName } = this.props;
+        const { stationName } = store.getState();
 
         return (
             
@@ -107,7 +108,7 @@ class GatexState extends Component {
                     </ColumnGroup>
                 </Table>
                 <Table dataSource={interfaceTraffic} id="interface-traffic">
-                    <ColumnGroup title={`接口流量（当前登录站点：本级）`} className="interface-traffic-captial">
+                    <ColumnGroup title={`接口流量（当前登录站点：${stationName}）`} className="interface-traffic-captial">
                         <Column title="设备接口" dataIndex="interfacename" key="11"></Column>
                         <Column title="接口状态" dataIndex="state" key="12"></Column>
                         <ColumnGroup title="数据速率(包/秒)">

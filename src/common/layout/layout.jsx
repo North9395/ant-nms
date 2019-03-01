@@ -60,8 +60,8 @@ class SiderLayout extends Component {
                 <span style={{"visibility": this.state.collapsed ? 'hidden' : 'visible'}}>命令行执行</span>
               </Link>
             </Menu.Item>
-            <Menu.Item key="deltaConfig">
-              <Link to="/deltaConfig">
+            <Menu.Item key="systemConfig">
+              <Link to="/systemConfig">
                 <Icon type="hdd" theme="outlined" />
                 <span style={{"visibility": this.state.collapsed ? 'hidden' : 'visible'}}>配置管理</span>
               </Link>

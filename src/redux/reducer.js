@@ -1,5 +1,5 @@
-const reducer = (state = [], action) => {
-    switch(action) {
+const reducer = (state = {}, action) => {
+    switch(action.type) {
         case 'TRAP_CHANGED':
             return {
                 ...state,
